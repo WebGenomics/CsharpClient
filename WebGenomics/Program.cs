@@ -11,11 +11,13 @@ namespace WebGenomics
     {
         static void Main(string[] args)
         {
-            var genomics = GetResult("facebook.com");
+            //The target website
+            var uri = "facebook.com";
+            var genomics = GetWebSiteGenome(uri);
             Console.ReadKey();
         }
 
-        internal static Analysis GetResult(string uri)
+        internal static Analysis GetWebSiteGenome(string uri)
         {
             Analysis result = null;
             try
@@ -24,10 +26,13 @@ namespace WebGenomics
                 using (WebClient wc = new WebClient())
                 {
                     wc.Encoding = System.Text.UTF8Encoding.UTF8;
+                    //Accept header must be specified
                     wc.Headers["Accept"] = "application/json";
+                    // Username and password which you get when you registerd on the WebGenomics
                     wc.Credentials = new NetworkCredential("demo", "demo");
                     var jsonString = wc.DownloadString(url);
                     Console.WriteLine("Result: " + jsonString);
+                    //Deserialize to Analysis class
                     result = Newtonsoft.Json.JsonConvert.DeserializeObject<Analysis>(jsonString);
                 }
             }
